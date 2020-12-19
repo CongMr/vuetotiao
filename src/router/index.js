@@ -40,6 +40,13 @@ const routes = [
     path: '/search',
     name: 'search',
     component: () => import('@/views/search')
+  },
+  {
+    path: '/list/:listId',
+    name: 'list',
+    component: () => import('@/views/list'),
+    //也可以用props来传参
+    props:true
   }
 ]
 

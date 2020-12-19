@@ -6,7 +6,7 @@
     </van-nav-bar>
 <!--    文章频道列表-->
     <van-tabs v-model="active" class="channels-tabs">
-      <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
+      <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id" to="">
 <!--        文章列表-->
         <articel-list :channel = "channel"/>
       </van-tab>
