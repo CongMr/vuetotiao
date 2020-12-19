@@ -2,25 +2,29 @@
   <div class="list-container">
     <van-nav-bar  class="app-nav-bar" left-arrow @click-left="$router.back()" />
 
-    <h1 class="title">{{contentlist.title}}</h1>
+    <div class="article-wrap">
+      <h1 class="title">{{contentlist.title}}</h1>
+      <van-cell center class="user-info">
+        <div  slot="title" class="name">{{ contentlist.aut_name }}</div>
+        <van-image slot="icon" class="avatar" round fit="cover"  :src="contentlist.aut_photo" />
+        <div slot="label" class="putdate">{{ contentlist.pubdate | relativeTime}}</div>
+        <van-button
+          :type="contentlist.is_followed ? 'default' :'info'"
+          :icon="contentlist.is_followed ? '' : 'plus'"
+          round size="small" class="follow-btn"
+          :loading="isFollowloading"
+          @click="onFollow()"
+        >
+          {{contentlist.is_followed ? '已关注' : '关注'}}
+        </van-button>
+      </van-cell>
+      <div class="markdown-body" >
+        <div v-html="contentlist.content" ref="content-img"></div>
+      </div>
 
-    <van-cell center class="user-info">
-      <div  slot="title" class="name">{{ contentlist.aut_name }}</div>
-      <van-image slot="icon" class="avatar" round fit="cover"  :src="contentlist.aut_photo" />
-      <div slot="label" class="putdate">{{ contentlist.pubdate | relativeTime}}</div>
-      <van-button
-        :type="contentlist.is_followed ? 'default' :'info'"
-        :icon="contentlist.is_followed ? '' : 'plus'"
-        round size="small" class="follow-btn"
-        :loading="isFollowloading"
-        @click="onFollow()"
-      >
-        {{contentlist.is_followed ? '已关注' : '关注'}}
-      </van-button>
-    </van-cell>
-
-    <div class="markdown-body" >
-      <div v-html="contentlist.content" ref="content-img"></div>
+      <!--    文章评论-->
+      <com-ments :commentid = "listId"/>
+      <!--    文章评论-->
     </div>
 
     <!-- 底部区域 -->
@@ -37,12 +41,16 @@
 </template>
 
 <script>
+import ComMents from "@/views/list/comments/ComMents";
 import './mack-down.css'
 import {getList, getFollow, getDelFollow, AddStar,DelStar, AddLink, DelLink} from "@/api/list";
 import { ImagePreview } from 'vant';
 import { Toast,Dialog } from 'vant';
 export default {
 name: "index",
+  components:{
+    ComMents
+  },
   props:{
    //通过配置路由props  获取的文章详情id
     listId:{
@@ -63,7 +71,7 @@ name: "index",
   methods:{
     async loadList(){
       const {data} = await getList(this.listId)
-      console.log(data)
+      // console.log(data)
       this.contentlist = data.data
 
       //图片预览
@@ -140,6 +148,14 @@ name: "index",
 </script>
 
 <style scoped lang="less">
+.article-wrap{
+  overflow-y: auto;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 46px;
+  bottom: 44px;
+}
 .title{
   font-size: 22px;
   color: #3a3a3a;

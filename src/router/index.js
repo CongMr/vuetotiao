@@ -47,7 +47,12 @@ const routes = [
     component: () => import('@/views/list'),
     //也可以用props来传参
     props:true
-  }
+  },
+  {
+    path: '/useredit',
+    name: 'useredit',
+    component: () => import('@/views/useredit')
+  },
 ]
 
 const router = new VueRouter({
