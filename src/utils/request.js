@@ -5,6 +5,11 @@
 import axios from "axios"
 import store from '@/store'
 import JSONbig from 'json-bigint'
+import {Toast} from "vant";
+import router from "@/router";
+const resfreshToken = axios.create({
+  baseURL: 'http://ttapi.research.itcast.cn/', //基础路径
+})
 
 const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn/', //基础路径
@@ -43,6 +48,61 @@ request.interceptors.request.use(function (config) {
   return Promise.reject(error)
 });
 //响应拦截器
+request.interceptors.response.use(function (response) {
+
+
+
+  return response
+}, async function (error) {
+  const status = error.response.status
+  if (status === 400){
+    //客户端请求参数错误
+    Toast.fail('客户端请求参数异常')
+  }else if (status === 401){
+    //token无效
+    const  user = store.state;
+    if (!user || !user.token){
+      //直接跳转到登陆页
+      return redirectLogin()
+    }
+    //使用refreshtoken获取token
+    try {
+      const {data} = await resfreshToken({
+        method: 'PUT',
+        url:'/app/v1_0/authorizations',
+        headers:{
+          Authorization:`Bearer ${user.refresh_token}`
+        }
+      })
+      //拿到新的token，然后把它更新到vuex中
+      user.token = data.data.token
+      this.$store.commit('setUser',user)
+      //error.config是本次请求的相关配置对象
+      return request(error.config)
+    }catch (err){
+      //刷新token失败，直接跳到登陆页
+      redirectLogin()
+    }
+
+  }else if (status === 403){
+    //没有权限操作
+    Toast.fail('没有权限操作')
+  }else if (status === 500){
+    //服务端异常
+    Toast.fail('服务端异常，请稍后重试')
+  }
+  return Promise.reject(error)
+});
+
+
+function redirectLogin(){
+  router.replace({
+    name:'login',
+    query:{
+      redirect:router.currentRoute.fullPath
+    }
+  });
+}
 
 //导出
 

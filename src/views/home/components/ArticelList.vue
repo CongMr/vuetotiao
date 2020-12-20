@@ -1,5 +1,5 @@
 <template>
-  <div class="article-list">
+  <div class="article-list" ref="article-list">
 
 <!--    //下拉刷新-->
     <van-pull-refresh v-model="isRefreshLoading" @refresh="onRefresh" :success-text="successtitle" :success-duration="1500" >
@@ -15,6 +15,7 @@
 <script>
 import {getChannelsList} from "@/api/home";
 import ArticeListItem from "@/components/ArticelItem/ArticeListItem";
+import { debounce } from 'lodash'
 export default {
   name: "ArticelList",
   components:{
@@ -34,10 +35,18 @@ export default {
       timestamp: null,
       count: 0,
       isRefreshLoading: false,
-      successtitle:''
+      successtitle:'',
+      scrollTop:0,//列表滚动到顶部的距离
     };
   },
   created() {
+  },
+  mounted() {
+    const articleList = this.$refs['article-list']
+    articleList.onscroll = debounce(() =>{
+      this.scrollTop = articleList.scrollTop
+      console.log(this.scrollTop)
+    },100)
   },
   methods:{
 
@@ -79,6 +88,15 @@ export default {
       this.successtitle = '刷新成功'
     },
   },
+
+//记录到顶部的距离
+  activated() {
+    this.$refs['article-list'].scrollTop =  this.scrollTop
+    console.log('组件被激活')
+  },
+  deactivated() {
+    console.log('组件被销毁')
+  }
 }
 </script>
 

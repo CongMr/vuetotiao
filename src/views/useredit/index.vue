@@ -29,7 +29,7 @@
 
     <!--    修改用户头像-->
     <van-popup v-model="isImgshow" position="bottom"  style="height: 100%">
-      <update-img v-if="isImgshow" :privrFile = "privrFile" @close="isImgshow = false"/>
+      <update-img v-if="isImgshow" :privrFile = "privrFile" @close="isImgshow = false" @update-img="editlist.photo = $event"/>
     </van-popup>
   </div>
 </template>
@@ -65,7 +65,7 @@ export default {
     //获取用户个人资料
     async getEdit(){
       const  {data } = await userEdit()
-      console.log(data)
+      // console.log(data)
       this.editlist = data.data
     },
     // 获取点击图片焦点
@@ -75,9 +75,10 @@ export default {
       // console.log(this.$refs.file.files[0])
 
       //获取选中图片的dom img信息
-      const blob = window.URL.createObjectURL(this.$refs.file.files[0])
+      const blob = this.$refs.file.files[0]
+      // const blob = window.URL.createObjectURL(this.$refs.file.files[0])
       this.privrFile = blob
-
+      // console.log(this.privrFile)
       //为了解决相同文件不触发chang事件，所以这里手动清空file的value
       this.$refs.file.value = ''
     }
@@ -87,6 +88,9 @@ export default {
 
 <style scoped lang="less">
 .van-popup{
-  background-color: #f5f7f9;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

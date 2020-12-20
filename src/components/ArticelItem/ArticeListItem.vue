@@ -27,7 +27,8 @@ name: "ArticeListItem",
       type: Object,
       required: true
     }
-  }
+  },
+
 }
 </script>
 

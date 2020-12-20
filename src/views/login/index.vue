@@ -92,7 +92,11 @@ export default {
         const {data} = await login(this.user)
         console.log(data)
         Toast.success('登录成功');
-        this.$router.push('/my');
+
+        //登陆的时候清除缓存,让它重新渲染
+        this.$store.commit('delCachePages','LayoutIndex')
+
+        this.$router.back();
         //登陆成功,把用户token放到vuex中
         this.$store.commit('setUser',data.data)
       }catch (error){

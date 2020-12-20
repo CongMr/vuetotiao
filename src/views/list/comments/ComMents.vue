@@ -1,6 +1,6 @@
 <template>
   <div class="comments-list">
-    <van-list  v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" >
+    <van-list  v-model="loading" :finished="finished" finished-text="没有更多了" >
       <van-cell v-for="item in list" :key="item" :title="item" />
     </van-list>
   </div>
@@ -27,15 +27,15 @@ name: "ComMents",
     };
   },
   methods: {
-    async onLoad() {
-      const  {data} = await getComments({
-        type: 'a',
-        source: this.commentid,
-        offset:this.offest,
-        limit:this.totalCount
-      })
-      console.log(data)
-    },
+    // async onLoad() {
+    //   const  {data} = await getComments({
+    //     type: 'a',
+    //     source: this.commentid,
+    //     offset:this.offest,
+    //     limit:this.totalCount
+    //   })
+    //   console.log(data)
+    // },
   },
 }
 </script>

@@ -22,9 +22,7 @@
         <div v-html="contentlist.content" ref="content-img"></div>
       </div>
 
-      <!--    文章评论-->
-      <com-ments :commentid = "listId"/>
-      <!--    文章评论-->
+
     </div>
 
     <!-- 底部区域 -->
@@ -41,16 +39,13 @@
 </template>
 
 <script>
-import ComMents from "@/views/list/comments/ComMents";
 import './mack-down.css'
 import {getList, getFollow, getDelFollow, AddStar,DelStar, AddLink, DelLink} from "@/api/list";
 import { ImagePreview } from 'vant';
 import { Toast,Dialog } from 'vant';
 export default {
 name: "index",
-  components:{
-    ComMents
-  },
+
   props:{
    //通过配置路由props  获取的文章详情id
     listId:{
